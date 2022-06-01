@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = ViewBag.movie.Title + " - Similar";
+}
+<div class="text-center">
+<h1 >Similar Movies to <a href="/movie/@ViewBag.movie.Id">@ViewBag.movie.Title</a> </h1>
+<h6>Results are assembled by looking at genres and keywords: @ViewBag.keywords</h6>
+</div>
+
+@foreach (MovieModel movie in ViewBag.movieList)
+{
+    <hr />
+    <div class="text-center">
+        <h5 class="card-title">@movie.Title</h5>
+        @if (movie.Release_date != "")
+        {
+            <p>(@movie.Release_date[..4])</p>
+        }
+        <a href="/movie/@movie.Id"><img src="https://image.tmdb.org/t/p/original\@movie.Poster_path" width="250" class="img-thumbnail" /></a>
+        <br>
+        <button id="like" title="Thumbs Up">👍</button>
+        <button id="dislike" title="Thumbs Down">👎</button>
+        <button id="addToList" title="Add to WatchList">👀</button>
+    </div>    
+}
+
+<br />
+@if (ViewBag.num > 1)
+{
+    ViewBag.num--;
+    <a href="/movie/@ViewBag.movie.Id/similar/@ViewBag.num">&lt; Previous</a>
+    ViewBag.num++;
+}
+@{
+    ViewBag.num++;
+}
+<a href="/movie/@ViewBag.movie.Id/similar/@ViewBag.num" style="float: right">Next &gt;</a><br />
