@@ -10,7 +10,7 @@ namespace MovieMatch.Models
         public static void InitializeClient()
         {
             ApiClient = new HttpClient();
-            //ApiClient.BaseAddress = new Uri("http://");
+            //ApiClient.BaseAddress = new Uri("https://api.themoviedb.org/3/movie/");
             ApiClient.DefaultRequestHeaders.Accept.Clear();
             ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

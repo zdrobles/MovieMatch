@@ -11,7 +11,7 @@
         {
             <p>(@movie.Release_date[..4])</p>
         }
-        <a href="/movie/@movie.Id"><img src="https://image.tmdb.org/t/p/original\@movie.Poster_path" width="250" class="img-thumbnail" /></a>
+        <a asp-action="Index" asp-route-id="@movie.Id"><img src="https://image.tmdb.org/t/p/original\@movie.Poster_path" width="250" class="img-thumbnail" /></a>
         <br>
         <button id="like" title="Thumbs Up">👍</button>
         <button id="dislike" title="Thumbs Down">👎</button>
@@ -20,13 +20,13 @@
 }
 
 <br />
-@if (ViewBag.num > 1)
+@if (ViewBag.page > 1)
 {
-    ViewBag.num--;
-    <a href="/popular/@ViewBag.num">&lt; Previous</a>
-    ViewBag.num++;
+    ViewBag.page--;
+    <a asp-action="Popular" asp-route-page="@ViewBag.page">&lt; Previous</a>
+    ViewBag.page++;
 }
 @{
-    ViewBag.num++;
+    ViewBag.page++;
 }
-<a href="/popular/@ViewBag.num" style="float: right">Next &gt;</a><br />
+<a asp-action="Popular" asp-route-page="@ViewBag.page" style="float: right">Next &gt;</a><br />

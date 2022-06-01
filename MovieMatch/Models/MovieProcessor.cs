@@ -26,43 +26,10 @@ namespace MovieMatch.Models
             }
         }
 
-        //public static async Task<MovieModel> LoadMovie()
-        //{
-        //    int maxNum = 0;
-        //    using (HttpResponseMessage resp = await APIHelper.ApiClient.GetAsync("https://api.themoviedb.org/3/movie/latest?api_key=23772da152380f0f559f6ef4456ca9c1"))
-        //    {
-        //        if (resp.IsSuccessStatusCode)
-        //        {
-        //            MovieModel mov = await resp.Content.ReadAsAsync<MovieModel>();
-        //            maxNum = mov.Id;
-        //        }
-        //        else
-        //        {
-        //            throw new Exception(resp.ReasonPhrase);
-        //        }
-        //    }
-
-        //    string url = $"https://api.themoviedb.org/3/movie/{random.Next(9, maxNum)}?api_key=23772da152380f0f559f6ef4456ca9c1";
-        //    HttpResponseMessage response;
-        //    MovieModel movie = new MovieModel();
-        //    using (response = await APIHelper.ApiClient.GetAsync(url))
-        //    {
-        //        while (!response.IsSuccessStatusCode)
-        //        {
-        //            using (response = await APIHelper.ApiClient.GetAsync($"https://api.themoviedb.org/3/movie/{random.Next(9, maxNum)}?api_key=23772da152380f0f559f6ef4456ca9c1"))
-        //            {
-        //                if (!response.IsSuccessStatusCode) { continue; }
-        //                movie = await response.Content.ReadAsAsync<MovieModel>();
-        //            }
-        //        }
-        //        return movie;
-        //    }
-        //}
-
-        public static async Task<List<MovieModel>> GetPopular(int num)
+        public static async Task<Root> GetPopular(int page)
         {
 
-            string url = $"https://api.themoviedb.org/3/movie/popular?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&page={num}";
+            string url = $"https://api.themoviedb.org/3/movie/popular?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&page={page}";
             using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
@@ -70,8 +37,8 @@ namespace MovieMatch.Models
                     string myJsonResponse = await response.Content.ReadAsStringAsync();
                     Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
-                    List<MovieModel> movies = myDeserializedClass.Results;
-                    return movies;
+                    //List<MovieModel> movies = myDeserializedClass.Results;
+                    return myDeserializedClass;
                 }
                 else
                 {
@@ -79,9 +46,9 @@ namespace MovieMatch.Models
                 }
             }
         }
-        public static async Task<List<MovieModel>> FindSimilar(int id, int num)
+        public static async Task<Root> FindSimilar(int id, int page)
         {
-            string url = $"https://api.themoviedb.org/3/movie/{id}/similar?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&page={num}";
+            string url = $"https://api.themoviedb.org/3/movie/{id}/recommendations?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&page={page}";
             using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
@@ -89,8 +56,8 @@ namespace MovieMatch.Models
                     string myJsonResponse = await response.Content.ReadAsStringAsync();
                     Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
-                    List<MovieModel> movies = myDeserializedClass.Results;
-                    return movies;
+                    //List<MovieModel> movies = myDeserializedClass.Results;
+                    return myDeserializedClass;
                 }
                 else
                 {
@@ -115,6 +82,26 @@ namespace MovieMatch.Models
                         keywords.Add(key.Name);
                     }
                     return keywords;
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
+
+        public static async Task<Root> Search(string query, int page)
+        {
+            string url = $"https://api.themoviedb.org/3/search/movie?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&query={query}&page={page}&include_adult=false";
+            using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    string myJsonResponse = await response.Content.ReadAsStringAsync();
+                    Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+
+                    //List<MovieModel> movies = myDeserializedClass.Results;
+                    return myDeserializedClass;
                 }
                 else
                 {

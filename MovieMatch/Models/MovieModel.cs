@@ -10,6 +10,7 @@ namespace MovieMatch.Models
         public string Poster_path { get; set; }
         public string Overview { get; set; }
         public string Imdb_id { get; set; }
+        public string Tagline { get; set; }
 
     }
 
@@ -17,8 +18,8 @@ namespace MovieMatch.Models
     {
         //public int Page { get; set; }
         public List<MovieModel> Results { get; set; }
-        //public int Total_pages { get; set; }
-        //public int Total_results { get; set; }
+        public int Total_pages { get; set; }
+        public int Total_results { get; set; }
     }
 
     public class KeywordRoot

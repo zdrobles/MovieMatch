@@ -7,7 +7,6 @@ namespace MovieMatch.Controllers
 {
     public class MovieController : Controller
     {
-        [HttpGet("/movie/{id}")]
         public async Task<IActionResult> IndexAsync(int id)
         {
             MovieModel movie = await MovieProcessor.LoadMovie(id);
@@ -15,16 +14,16 @@ namespace MovieMatch.Controllers
             return View();
         }
 
-        [HttpGet("/popular/{num?}")]
-        public async Task<IActionResult> PopularAsync(int num = 1)
+        public async Task<IActionResult> PopularAsync(int page = 1)
         {
-            List<MovieModel> movieList = await MovieProcessor.GetPopular(num);
-            ViewBag.movieList = movieList;
-            ViewBag.num = num;
+            Root everything = await MovieProcessor.GetPopular(page);
+            ViewBag.totalPages = everything.Total_pages;
+            ViewBag.movieList = everything.Results;
+            ViewBag.page = page;
             return View();
         }
-        [HttpGet("/movie/{id}/similar/{num?}")]
-        public async Task<IActionResult> SimilarAsync(int id, int num = 1)
+
+        public async Task<IActionResult> SimilarAsync(int id, int page = 1)
         {
             MovieModel movie = await MovieProcessor.LoadMovie(id);
             ViewBag.movie = movie;
@@ -33,10 +32,26 @@ namespace MovieMatch.Controllers
 
             ViewBag.keywords = string.Join(", ", keywords);
 
-            List<MovieModel> movieList = await MovieProcessor.FindSimilar(id, num);
-            ViewBag.movieList = movieList;
-            ViewBag.num = num;
+            Root everything = await MovieProcessor.FindSimilar(id, page);
+            ViewBag.totalPages = everything.Total_pages;
+            ViewBag.movieList = everything.Results;
+            ViewBag.page = page;
             return View();
+        }
+
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> SearchMoviesAsync(string query, int page = 1)
+        {
+            Root everything = await MovieProcessor.Search(query, page);
+            ViewBag.totalPages = everything.Total_pages;
+            ViewBag.movieList = everything.Results;
+            ViewBag.page = page;
+            ViewBag.query = query;
+            return View("search");
         }
     }
 }

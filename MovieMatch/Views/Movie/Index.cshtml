@@ -3,7 +3,8 @@
 }
 
 <div class="text-center">
-    <h1>@ViewData["Title"]</h1>
+    <h1 class="card-header">@ViewData["Title"]</h1>
+    <h5><em>@ViewBag.movie.Tagline</em></h5>
     <a href="https://www.imdb.com/title\@ViewBag.movie.Imdb_id"><img src="https://image.tmdb.org/t/p/original\@ViewBag.movie.Poster_path" width="350" class="img-thumbnail" /></a>
     @if (ViewBag.movie.Release_date == "")
     {
@@ -18,5 +19,5 @@
     <button id="like" title="Thumbs Up">👍</button>
     <button id="dislike" title="Thumbs Down">👎</button>
     <button id="addToList" title="Add to WatchList">👀</button>
-    <br /><a href="/movie/@ViewBag.movie.Id/similar">Find similar movies</a>
+    <br /><a asp-action="Similar" asp-route-id="@ViewBag.movie.Id">Find similar movies</a>
 </div>
