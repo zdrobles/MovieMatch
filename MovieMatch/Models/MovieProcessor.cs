@@ -8,7 +8,6 @@ namespace MovieMatch.Models
 {
     public class MovieProcessor
     {
-        private static Random random = new Random();
         public static async Task<MovieModel> LoadMovie(int num)
         {
             string url = $"https://api.themoviedb.org/3/movie/{num}?api_key=23772da152380f0f559f6ef4456ca9c1";
@@ -26,10 +25,9 @@ namespace MovieMatch.Models
             }
         }
 
-        public static async Task<Root> GetPopular(int page)
+        public static async Task<Root> GetMovies(int page, string selection)
         {
-
-            string url = $"https://api.themoviedb.org/3/movie/popular?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&page={page}";
+            string url = $"https://api.themoviedb.org/3/movie/{selection}?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&region=US&page={page}";
             using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
@@ -37,7 +35,6 @@ namespace MovieMatch.Models
                     string myJsonResponse = await response.Content.ReadAsStringAsync();
                     Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
-                    //List<MovieModel> movies = myDeserializedClass.Results;
                     return myDeserializedClass;
                 }
                 else
@@ -56,7 +53,6 @@ namespace MovieMatch.Models
                     string myJsonResponse = await response.Content.ReadAsStringAsync();
                     Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
-                    //List<MovieModel> movies = myDeserializedClass.Results;
                     return myDeserializedClass;
                 }
                 else
@@ -92,7 +88,7 @@ namespace MovieMatch.Models
 
         public static async Task<Root> Search(string query, int page)
         {
-            string url = $"https://api.themoviedb.org/3/search/movie?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&query={query}&page={page}&include_adult=false";
+            string url = $"https://api.themoviedb.org/3/search/movie?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&region=US&query={query}&page={page}&include_adult=false";
             using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
@@ -100,7 +96,33 @@ namespace MovieMatch.Models
                     string myJsonResponse = await response.Content.ReadAsStringAsync();
                     Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
-                    //List<MovieModel> movies = myDeserializedClass.Results;
+                    return myDeserializedClass;
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
+        public static async Task<Root> Discover(int page, string year, string genres)
+        {
+            string url = $"https://api.themoviedb.org/3/discover/movie?api_key=23772da152380f0f559f6ef4456ca9c1&include_adult=false&include_video=false&page={page}";
+
+            if(year != null)
+            {
+                url += $"&primary_release_year={year}";
+            }
+            if(genres != null)
+            {
+                url += $"with_genres={genres}";
+            }
+            using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    string myJsonResponse = await response.Content.ReadAsStringAsync();
+                    Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+
                     return myDeserializedClass;
                 }
                 else

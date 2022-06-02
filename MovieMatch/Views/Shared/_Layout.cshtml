@@ -25,11 +25,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/movie/popular">Popular</a>
+                        <!--
+<li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Discover">Discover</a>
                         </li>
+                        -->
+                        
+
+                        <li class="dropdown">
+                            <span class="dropdown-toggle nav-link text-dark" id="dropdownMenuButton" data-toggle="dropdown">
+                                Movies
+                            </span>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-controller="Movie" asp-action="Fetch" asp-route-selection="Popular">Popular</a>
+                                <a class="dropdown-item" asp-controller="Movie" asp-action="Fetch" asp-route-selection="Top_Rated">Top Rated</a>
+                                <a class="dropdown-item" asp-controller="Movie" asp-action="Fetch" asp-route-selection="Now_Playing">Now Playing</a>
+                            </div>
+                        </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Movie" asp-action="Search">Search</a>
+                            <form method="post" class="nav-link text-dark" asp-controller="Movie" asp-action="Search">
+                                <input type="text" required name="query" />
+                                <button>🔍</button>
+                            </form>
                         </li>
                     </ul>
                 </div>

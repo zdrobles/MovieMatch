@@ -1,19 +1,15 @@
-﻿@{
-    ViewData["Title"] = ViewBag.movie.Title + " - Similar";
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
 }
-@if (ViewBag.page > ViewBag.totalPages || ViewBag.page < 1)
-{
-    <h1 class="alert-danger display-1">Page Does Not Exist</h1>
-}
-else
-{
-    <div class="text-center">
-        <h1 class="card-header display-4">Similar to <a asp-action="Index" asp-route-id="@ViewBag.movie.Id">@ViewBag.movie.Title</a> </h1>
-    </div>
+<h1 class="display-4">Discover</h1>
 
+@if (ViewBag.movieList != null)
+{
     @foreach (MovieModel movie in ViewBag.movieList)
     {
-        <br />
+        <hr />
         <div class="text-center">
             <h5 class="card-title">@movie.Title</h5>
 
@@ -26,21 +22,20 @@ else
             <button id="like" title="Thumbs Up">👍</button>
             <button id="dislike" title="Thumbs Down">👎</button>
             <button id="addToList" title="Add to WatchList">👀</button>
-        </div><hr />
+        </div>
     }
 
-    <br />
     @if (ViewBag.page > 1)
     {
         ViewBag.page--;
-        <a asp-action="Similar" asp-route-id="@ViewBag.movie.Id" asp-route-page="@ViewBag.page">&lt; Previous</a>
+        <a asp-action="DiscoverMovies" asp-route-year="@ViewBag.year" asp-route-page="@ViewBag.page">&lt; Previous</a>
         ViewBag.page++;
     }
 
     @if (ViewBag.page < ViewBag.totalPages)
     {
         ViewBag.page++;
-        <a asp-action="Similar" asp-route-id="@ViewBag.movie.Id" asp-route-page="@ViewBag.page" style="float: right">Next &gt;</a>
+        <a asp-action="DiscoverMovies" asp-route-year="@ViewBag.year" asp-route-page="@ViewBag.page" style="float: right">Next &gt;</a>
     }
     <br />
 }
