@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Recommendations";
+}
+
+<h1 class="display-4">@ViewData["Title"]: @ViewBag.movies.Count</h1>
+@if(ViewBag.movies.Count < 1)
+{
+    <p>Rate more movies!</p>
+}
+<table class="table-striped">
+    @foreach (MovieModel movie in ViewBag.movies)
+    {
+        <tr><td><a asp-action="Index" asp-route-id="@movie.Id">@movie.Title</a></td></tr>
+    }
+</table>

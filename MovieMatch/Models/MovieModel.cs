@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MovieMatch.Models
 {
@@ -12,6 +13,25 @@ namespace MovieMatch.Models
         public string Imdb_id { get; set; }
         public string Tagline { get; set; }
 
+        public double Vote_Average { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is MovieModel model &&
+                   Id == model.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+
+        public override string ToString()
+        {
+            return $"{Title}";
+        }
+
+
     }
 
     public class Root
@@ -19,16 +39,7 @@ namespace MovieMatch.Models
         //public int Page { get; set; }
         public List<MovieModel> Results { get; set; }
         public int Total_pages { get; set; }
-        public int Total_results { get; set; }
+        //public int Total_results { get; set; }
     }
 
-    public class KeywordRoot
-    {
-        public List<Keyword> Keywords { get; set; }
-    }
-    public class Keyword
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
 }

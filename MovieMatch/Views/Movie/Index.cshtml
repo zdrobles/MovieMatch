@@ -5,23 +5,66 @@
 <div class="text-center">
     <h1 class="card-header display-4">@ViewData["Title"]</h1>
     <h5><em>@ViewBag.movie.Tagline</em></h5>
-    @if (ViewBag.movie.Imdb_id != "")
+    @if (ViewBag.movie.Imdb_id != null)
     {
-        <a href="https://www.imdb.com/title\@ViewBag.movie.Imdb_id"><img src="https://image.tmdb.org/t/p/original\@ViewBag.movie.Poster_path" width="350" class="img-thumbnail" alt="Image Not Found"/></a>
+        <a href="https://www.imdb.com/title\@ViewBag.movie.Imdb_id"><img src="https://image.tmdb.org/t/p/original\@ViewBag.movie.Poster_path" width="350" class="img-thumbnail" alt="Image Not Found" /></a>
     }
-    
+    else
+    {
+        <a href="https://image.tmdb.org/t/p/original\@ViewBag.movie.Poster_path"><img src="https://image.tmdb.org/t/p/original\@ViewBag.movie.Poster_path" width="350" class="img-thumbnail" alt="Image Not Found" /></a>
+    }
+
     @if (ViewBag.movie.Release_date == "")
     {
         <p>Release Date: N/A </p>
     }
     else
     {
-        <p>Release Date: <a asp-action="DiscoverMovies" asp-route-year="@ViewBag.movie.Release_date.Substring(0, 4)">@ViewBag.movie.Release_date</a></p>
+        <p>Release Date: <a asp-action="DiscoverMovies" asp-route-year="@ViewBag.movie.Release_date.Substring(0, 4)">@ViewBag.movie.Release_date.Substring(0, 4)</a>@ViewBag.movie.Release_date.Substring(4)</p>
+    }
+    <p class="box-shadow" style="background-color: white;">@ViewBag.movie.Overview</p>
+    @if (ViewBag.logged)//if logged in
+    {
+        @if (ViewBag.thumb != null)//if user already rated this movie
+        {
+            @if (ViewBag.thumb)//Liked
+            {
+                        //remove like
+                <a asp-action="RemoveRating" asp-route-movieId="@ViewBag.movie.Id">
+                    <button id=like title="Thumbs Up">👍</button>
+                </a>
+
+                //switch to Dislike
+                <a asp-action="SwitchRating" asp-route-thumb="false" asp-route-movieId="@ViewBag.movie.Id">
+                    <button title="Thumbs Down">👎</button>
+                </a>
+
+            }
+            else//Disliked
+            {
+                //switch to Like
+                <a asp-action="SwitchRating" asp-route-thumb="true" asp-route-movieId="@ViewBag.movie.Id">
+                    <button title="Thumbs Up">👍</button>
+                </a>
+                //remove dislike
+                <a asp-action="RemoveRating" asp-route-movieId="@ViewBag.movie.Id">
+                    <button id="dislike" title="Thumbs Down">👎</button>
+                </a>
+            }
+        }
+        else// user did not rate this movie yet
+        {
+            <a asp-action="RateMovie" asp-route-thumb="true" asp-route-movieId="@ViewBag.movie.Id">
+                <button title="Thumbs Up">👍</button>
+            </a>
+            <a asp-action="RateMovie" asp-route-thumb="false" asp-route-movieId="@ViewBag.movie.Id">
+                <button title="Thumbs Down">👎</button>
+            </a>
+        }
+
+        @*<button id="addToList" title="Add to WatchList">👀</button>*@
+        <br />
     }
 
-    <p class="box-shadow" style="background-color: white;">@ViewBag.movie.Overview</p>
-    <button id="like" title="Thumbs Up">👍</button>
-    <button id="dislike" title="Thumbs Down">👎</button>
-    <button id="addToList" title="Add to WatchList">👀</button>
-    <br /><a asp-action="Similar" asp-route-id="@ViewBag.movie.Id">Find similar movies</a>
+    <a asp-action="Similar" asp-route-id="@ViewBag.movie.Id">Find similar movies</a>
 </div>

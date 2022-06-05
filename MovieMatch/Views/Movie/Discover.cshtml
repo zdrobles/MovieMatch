@@ -1,28 +1,81 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
 <h1 class="display-4">Discover</h1>
 
 @if (ViewBag.movieList != null)
 {
     @foreach (MovieModel movie in ViewBag.movieList)
     {
-        <hr />
+        @if (movie.Release_date == "") { continue; }
+        <br />
         <div class="text-center">
             <h5 class="card-title">@movie.Title</h5>
-
-            <a asp-action="Index" asp-route-id="@movie.Id"><img src="https://image.tmdb.org/t/p/original\@movie.Poster_path" width="250" class="img-thumbnail" alt="Image Not Found" /></a>
-            <br>
-            @if (movie.Release_date != "")
+            @if (movie.Poster_path != null)
             {
-                <p>(<a asp-action="DiscoverMovies" asp-route-year="@movie.Release_date[..4]">@movie.Release_date[..4]</a>)</p>
+                <a asp-action="Index" asp-route-id="@movie.Id"><img src="https://image.tmdb.org/t/p/original\@movie.Poster_path" width="250" class="img-thumbnail" alt="image not found" /></a>
             }
-            <button id="like" title="Thumbs Up">👍</button>
-            <button id="dislike" title="Thumbs Down">👎</button>
-            <button id="addToList" title="Add to WatchList">👀</button>
+            else
+            {
+                <a asp-action="Index" asp-route-id="@movie.Id"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzOvaNmJGJ0BCxEpCqAVKnhVAE8T6IPNODaw&usqp=CAU" width="250" class="img-thumbnail" alt="Image Not Found" /></a>
+            }
+            <br>
+            <p>(<a asp-action="DiscoverMovies" asp-route-year="@movie.Release_date[..4]">@movie.Release_date[..4]</a>)</p>
+
+            @if (ViewBag.logged)//if logged in
+            {
+                bool rated = false;
+                bool theThumb = false;
+                @foreach (Rate rate in ViewBag.RateList)
+                {
+                    @if (rate.MovieId == movie.Id && rate.ApplicationUserId == ViewBag.userId)
+                    {
+                        rated = true;
+                        theThumb = rate.Thumb;
+                        break;
+                    }
+                }
+                @if (rated)//if user already rated this movie
+                {
+                    @if (theThumb)//Liked
+                    {
+                        //remove like
+                        <a asp-action="RemoveRating" asp-route-movieId="@movie.Id">
+                            <button id=like title="Thumbs Up">👍</button>
+                        </a>
+
+                        //switch to Dislike
+                        <a asp-action="SwitchRating" asp-route-thumb="false" asp-route-movieId="@movie.Id">
+                            <button title="Thumbs Down">👎</button>
+                        </a>
+
+                    }
+                    else//Disliked
+                    {
+                        //switch to Like
+                        <a asp-action="SwitchRating" asp-route-thumb="true" asp-route-movieId="@movie.Id">
+                            <button title="Thumbs Up">👍</button>
+                        </a>
+                        //remove dislike
+                        <a asp-action="RemoveRating" asp-route-movieId="@movie.Id">
+                            <button id="dislike" title="Thumbs Down">👎</button>
+                        </a>
+                    }
+                }
+                else// user did not rate this movie yet
+                {
+                    <a asp-action="RateMovie" asp-route-thumb="true" asp-route-movieId="@movie.Id">
+                        <button title="Thumbs Up">👍</button>
+                    </a>
+                    <a asp-action="RateMovie" asp-route-thumb="false" asp-route-movieId="@movie.Id">
+                        <button title="Thumbs Down">👎</button>
+                    </a>
+                }
+
+                @*<button id="addToList" title="Add to WatchList">👀</button>*@
+                <br />
+            }
         </div>
+        <hr />
+
     }
 
     @if (ViewBag.page > 1)
@@ -31,6 +84,8 @@
         <a asp-action="DiscoverMovies" asp-route-year="@ViewBag.year" asp-route-page="@ViewBag.page">&lt; Previous</a>
         ViewBag.page++;
     }
+
+    <div class="text-center"><strong>@ViewBag.page</strong></div>
 
     @if (ViewBag.page < ViewBag.totalPages)
     {

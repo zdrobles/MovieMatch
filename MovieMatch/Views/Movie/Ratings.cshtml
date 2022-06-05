@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "My Ratings";
+}
+<h1 class="display-4">@ViewData["Title"]</h1>
+@if (ViewBag.context != null)
+{
+    <a style="float: right;" asp-action="Recommendations">Recommendations</a>
+    @foreach (Rate rate in ViewBag.context)
+    {
+
+        @if (rate.Thumb)
+        {
+            <p><a style="color: green" asp-action="Index" asp-route-id="@rate.MovieId">@rate.MovieTitle 👍</a></p>
+        }
+        else
+        {
+            <p><a style="color: red" asp-action="Index" asp-route-id="@rate.MovieId">@rate.MovieTitle 👎</a></p>
+        }
+
+    }
+
+    
+}
+

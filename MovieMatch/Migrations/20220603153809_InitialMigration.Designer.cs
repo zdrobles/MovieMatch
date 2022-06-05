@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieMatch.Data;
 
 namespace MovieMatch.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220603153809_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,17 +221,30 @@ namespace MovieMatch.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
                     b.Property<string>("MovieTitle")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<bool>("Thumb")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("UserRatingsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserRatingsId");
+
+                    b.ToTable("Rates");
+                });
+
+            modelBuilder.Entity("MovieMatch.Models.UserRatings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -290,6 +305,13 @@ namespace MovieMatch.Migrations
                 });
 
             modelBuilder.Entity("MovieMatch.Models.Rate", b =>
+                {
+                    b.HasOne("MovieMatch.Models.UserRatings", null)
+                        .WithMany("Rates")
+                        .HasForeignKey("UserRatingsId");
+                });
+
+            modelBuilder.Entity("MovieMatch.Models.UserRatings", b =>
                 {
                     b.HasOne("MovieMatch.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()

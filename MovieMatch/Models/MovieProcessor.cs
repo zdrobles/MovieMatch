@@ -62,30 +62,6 @@ namespace MovieMatch.Models
             }
         }
 
-        public static async Task<List<string>> GetKeywords(int id)
-        {
-            string url = $"https://api.themoviedb.org/3/movie/{id}/keywords?api_key=23772da152380f0f559f6ef4456ca9c1";
-            using (HttpResponseMessage response = await APIHelper.ApiClient.GetAsync(url))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    List<string> keywords = new List<string>();
-                    string myJsonResponse = await response.Content.ReadAsStringAsync();
-                    KeywordRoot myDeserializedClass = JsonConvert.DeserializeObject<KeywordRoot>(myJsonResponse);
-
-                    foreach (var key in myDeserializedClass.Keywords)
-                    {
-                        keywords.Add(key.Name);
-                    }
-                    return keywords;
-                }
-                else
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
-            }
-        }
-
         public static async Task<Root> Search(string query, int page)
         {
             string url = $"https://api.themoviedb.org/3/search/movie?api_key=23772da152380f0f559f6ef4456ca9c1&language=en-US&region=US&query={query}&page={page}&include_adult=false";
