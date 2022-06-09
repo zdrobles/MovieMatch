@@ -4,7 +4,9 @@
 <h1 class="display-4">@ViewData["Title"]</h1>
 @if (ViewBag.context != null)
 {
-    <a style="float: right;" asp-action="Recommendations">Recommendations</a>
+    <h5>Rated: @ViewBag.context.Count movies
+    <a style="float: right;" asp-action="Recommendations">Recommendations</a></h5>
+    <hr />
     @foreach (Rate rate in ViewBag.context)
     {
 
@@ -19,6 +21,6 @@
 
     }
 
-    
+
 }
 

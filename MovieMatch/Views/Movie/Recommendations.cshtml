@@ -8,8 +8,12 @@
     <p>Rate more movies!</p>
 }
 <table class="table-striped">
-    @foreach (MovieModel movie in ViewBag.movies)
+    @*@foreach (MovieModel movie in ViewBag.movies)
     {
         <tr><td><a asp-action="Index" asp-route-id="@movie.Id">@movie.Title</a></td></tr>
-    }
+    }*@
+    @for (int i  = ViewBag.movies.Count - 1; i >= 0; i--)
+   {
+       <tr><td><a asp-action="Index" asp-route-id="@ViewBag.movies[i].Id">@ViewBag.movies[i].Title</a></td></tr>
+   }
 </table>

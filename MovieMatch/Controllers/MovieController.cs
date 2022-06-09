@@ -160,10 +160,12 @@ namespace MovieMatch.Controllers
             }
             foreach (Rate rating in userLikes)
             {
+                //if(recommend.Count > 50) { break; }
+
                 Root check = await MovieProcessor.FindSimilar(rating.MovieId, 1);//find total_pages and
                 foreach (MovieModel movie in check.Results)//grab the first page
                 {
-                    if (!recommend.Contains(movie) && !alreadyRatedMovies.Contains(movie) && movie.Release_date != "" && movie.Vote_Average > 6)
+                    if (movie.Release_date != "" && !alreadyRatedMovies.Contains(movie) && !recommend.Contains(movie))
                     {
                         recommend.Add(movie);
                     }
@@ -190,14 +192,8 @@ namespace MovieMatch.Controllers
         {
             MovieModel movie = await MovieProcessor.LoadMovie(movieId);
 
-            try
-            {
-                Rate theRate = GetMovieRating(movieId);
-            }
-            catch (Exception)
-            {
-                AddRate(movie, thumb);
-            }
+            AddRate(movie, thumb);
+
             try
             {
                 ViewBag.context = GetUserRatings();
@@ -209,7 +205,7 @@ namespace MovieMatch.Controllers
             return View("Ratings");
         }
 
-        
+
         [Authorize]
         public IActionResult Ratings()
         {
